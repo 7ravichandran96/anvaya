@@ -1,1885 +1,723 @@
-<<<<<<< HEAD
+<!-- # Professional Anvaya Events Gallery (Tailwind + Fixed Image Fetch)
+
+
+html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Anvaya Events — Luxury Experiences</title>
+<title>Anvaya Events</title>
 
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Google Fonts -->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+<!-- GSAP -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
 <style>
-:root{
-    --primary:#d6b36a;
-    --dark:#060606;
-    --card:#111111;
-    --text:#ffffff;
-    --muted:#c6c6c6;
-    --glass:rgba(255,255,255,.06);
-    --border:rgba(255,255,255,.08);
-    --transition:all .5s cubic-bezier(.22,.61,.36,1);
-    --shadow:0 30px 80px rgba(0,0,0,.45);
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
 
 body{
-    background:var(--dark);
-    color:var(--text);
     font-family:'Inter',sans-serif;
+    background:#050505;
     overflow-x:hidden;
 }
 
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:
-    radial-gradient(circle at top left, rgba(214,179,106,.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(214,179,106,.08), transparent 30%),
-    radial-gradient(circle at center, rgba(255,255,255,.02), transparent 40%);
-    z-index:-2;
-}
-
-.cursor-glow{
-    position:fixed;
-    width:340px;
-    height:340px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(214,179,106,.12), transparent 70%);
-    pointer-events:none;
-    transform:translate(-50%,-50%);
-    z-index:-1;
-    mix-blend-mode:screen;
-}
-
-nav{
-    position:fixed;
-    top:0;
-    width:100%;
-    z-index:1000;
-    padding:22px 6%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    backdrop-filter:blur(20px);
-    background:rgba(0,0,0,.45);
-    border-bottom:1px solid var(--border);
-}
-
-.logo{
+.luxury-font{
     font-family:'Cormorant Garamond',serif;
-    color:var(--primary);
-    font-size:2.2rem;
-    font-weight:700;
-    letter-spacing:4px;
 }
 
-.nav-links{
-    display:flex;
-    gap:38px;
+.hero-overlay{
+    background:linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.85));
 }
 
-.nav-links a{
-    text-decoration:none;
-    color:var(--text);
-    text-transform:uppercase;
-    letter-spacing:2px;
-    font-size:.82rem;
-    position:relative;
-}
-
-.nav-links a::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:-8px;
-    width:0;
-    height:1px;
-    background:var(--primary);
-    transition:var(--transition);
-}
-
-.nav-links a:hover::after{
-    width:100%;
-}
-
-.hero{
-    position:relative;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    overflow:hidden;
-}
-
-.hero video{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    filter:brightness(.45);
-}
-
-.hero::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.82));
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-    max-width:1000px;
-    padding:20px;
-}
-
-.hero-subtitle{
-    color:var(--primary);
-    text-transform:uppercase;
-    letter-spacing:6px;
-    margin-bottom:20px;
-    font-size:.9rem;
-}
-
-.hero h1{
-    font-family:'Cormorant Garamond',serif;
-    font-size:6rem;
-    line-height:.95;
-    margin-bottom:24px;
-}
-
-.hero p{
-    max-width:760px;
-    margin:auto;
-    line-height:1.9;
-    color:var(--muted);
-    font-size:1.05rem;
-}
-
-.hero-btns{
-    margin-top:42px;
-    display:flex;
-    justify-content:center;
-    gap:18px;
-    flex-wrap:wrap;
-}
-
-.btn{
-    padding:16px 34px;
-    border-radius:50px;
-    text-decoration:none;
-    font-weight:600;
-    letter-spacing:1px;
-    transition:var(--transition);
-}
-
-.btn-primary{
-    background:var(--primary);
-    color:#111;
-}
-
-.btn-primary:hover{
-    transform:translateY(-5px);
-    box-shadow:0 18px 40px rgba(214,179,106,.28);
-}
-
-.btn-outline{
-    border:1px solid rgba(255,255,255,.18);
-    color:#fff;
-    background:rgba(255,255,255,.04);
-}
-
-.btn-outline:hover{
-    background:rgba(255,255,255,.08);
-}
-
-.stats{
-    padding:110px 6%;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:26px;
-}
-
-.stat-box{
-    background:var(--glass);
-    border:1px solid var(--border);
-    border-radius:28px;
-    padding:50px 30px;
-    backdrop-filter:blur(20px);
-    text-align:center;
-    transition:var(--transition);
-}
-
-.stat-box:hover{
-    transform:translateY(-10px);
-}
-
-.stat-box h2{
-    color:var(--primary);
-    font-family:'Cormorant Garamond',serif;
-    font-size:3.5rem;
-}
-
-.stat-box p{
-    margin-top:10px;
-    color:var(--muted);
-}
-
-.section-title{
-    text-align:center;
-    padding:40px 20px 20px;
-}
-
-.section-title span{
-    color:var(--primary);
-    letter-spacing:4px;
-    text-transform:uppercase;
-    font-size:.8rem;
-}
-
-.section-title h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:4rem;
-    margin-top:14px;
-}
-
-.controls{
-    padding:40px 6%;
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:16px;
-}
-
-.filter-btn{
-    border:none;
-    cursor:pointer;
-    padding:14px 26px;
-    border-radius:40px;
+.glass{
     background:rgba(255,255,255,.05);
-    color:#fff;
-    border:1px solid var(--border);
-    transition:var(--transition);
+    backdrop-filter:blur(16px);
+    border:1px solid rgba(255,255,255,.08);
 }
 
-.filter-btn:hover,
-.filter-btn.active{
-    background:var(--primary);
-    color:#111;
-}
-
-.gallery{
+.gallery-column{
     column-count:3;
-    column-gap:28px;
-    padding:30px 6% 120px;
+    column-gap:24px;
 }
 
 .gallery-card{
-    position:relative;
-    overflow:hidden;
-    border-radius:32px;
-    margin-bottom:28px;
     break-inside:avoid;
-    background:var(--card);
-    cursor:pointer;
-    box-shadow:var(--shadow);
-}
-
-.gallery-card::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.08), transparent 80%);
-    transform:translateX(-120%);
-    transition:1.2s ease;
-}
-
-.gallery-card:hover::after{
-    transform:translateX(120%);
+    margin-bottom:24px;
 }
 
 .gallery-card img{
-    width:100%;
-    display:block;
-    transition:transform 1.2s ease;
-    filter:brightness(.86);
+    transition:transform .7s ease;
 }
 
 .gallery-card:hover img{
-    transform:scale(1.08);
-    filter:brightness(1);
-}
-
-.overlay{
-    position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    padding:30px;
-    background:linear-gradient(to top, rgba(0,0,0,.88), rgba(0,0,0,.15));
-}
-
-.tag{
-    width:max-content;
-    padding:8px 16px;
-    border-radius:30px;
-    background:rgba(214,179,106,.16);
-    border:1px solid rgba(214,179,106,.22);
-    color:#f8ebc7;
-    margin-bottom:16px;
-    font-size:.78rem;
-    letter-spacing:1px;
-}
-
-.overlay h3{
-    font-family:'Cormorant Garamond',serif;
-    font-size:2rem;
-    margin-bottom:8px;
-}
-
-.overlay p{
-    color:#d5d5d5;
-    line-height:1.7;
-}
-
-.experience{
-    padding:120px 6%;
-}
-
-.experience-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:60px;
-    align-items:center;
-}
-
-.experience img{
-    width:100%;
-    border-radius:32px;
-    box-shadow:var(--shadow);
-}
-
-.experience-content h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:4rem;
-    margin-bottom:20px;
-}
-
-.experience-content p{
-    color:var(--muted);
-    line-height:2;
-    margin-bottom:28px;
-}
-
-.testimonials{
-    padding:120px 6%;
-}
-
-.testimonial-box{
-    max-width:900px;
-    margin:auto;
-    padding:60px;
-    border-radius:36px;
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--border);
-    text-align:center;
-    backdrop-filter:blur(16px);
-}
-
-.testimonial-box h3{
-    font-family:'Cormorant Garamond',serif;
-    font-size:2.4rem;
-    line-height:1.4;
-}
-
-.testimonial-box p{
-    margin-top:22px;
-    color:var(--primary);
-    letter-spacing:2px;
-}
-
-footer{
-    padding:90px 6%;
-    text-align:center;
-    border-top:1px solid var(--border);
-}
-
-footer h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:3rem;
-    color:var(--primary);
-    margin-bottom:16px;
-}
-
-footer p{
-    color:var(--muted);
-    max-width:650px;
-    margin:auto;
-    line-height:1.9;
+    transform:scale(1.05);
 }
 
 .lightbox{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.96);
     display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:3000;
-    padding:30px;
 }
 
-.lightbox img{
-    max-width:92%;
-    max-height:90vh;
-    border-radius:24px;
+/* Lightbox image rotation and transitions */
+#lightboxImg{
+    transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
-.close-btn,
-.prev-btn,
-.next-btn{
-    position:absolute;
-    color:#fff;
-    cursor:pointer;
-    user-select:none;
+.lightbox-btn{
+    transition: all 0.3s ease;
+    opacity: 0.8;
 }
 
-.close-btn{
-    top:30px;
-    right:40px;
-    font-size:3rem;
+.lightbox-btn:hover{
+    opacity: 1;
+    transform: scale(1.15);
+    text-shadow: 0 0 20px rgba(217, 119, 6, 0.6);
 }
 
-.prev-btn,
-.next-btn{
-    top:50%;
-    transform:translateY(-50%);
-    font-size:3rem;
+.lightbox-btn:active{
+    transform: scale(0.95);
 }
 
-.prev-btn{left:40px;}
-.next-btn{right:40px;}
+.lightbox-controls{
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
 
-.reveal{
-    opacity:0;
-    transform:translateY(80px);
+.lightbox-controls.hidden{
+    opacity: 0;
+    pointer-events: none;
+}
+
+.control-panel{
+    animation: slideUp 0.4s ease forwards;
+}
+
+@keyframes slideUp{
+    from{
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to{
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.shortcuts-info{
+    animation: slideIn 0.4s ease forwards;
+}
+
+@keyframes slideIn{
+    from{
+        transform: translateX(30px);
+        opacity: 0;
+    }
+    to{
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
 @media(max-width:1000px){
-    .gallery{
+    .gallery-column{
         column-count:2;
-    }
-
-    .experience-grid{
-        grid-template-columns:1fr;
-    }
-
-    .hero h1{
-        font-size:4.5rem;
     }
 }
 
 @media(max-width:700px){
-    .nav-links{
-        display:none;
-    }
-
-    .gallery{
+    .gallery-column{
         column-count:1;
     }
-
-    .hero h1{
-        font-size:3.2rem;
-    }
-
-    .section-title h2,
-    .experience-content h2{
-        font-size:2.8rem;
-    }
-
-    .testimonial-box{
-        padding:40px 24px;
-    }
-
-    .testimonial-box h3{
-        font-size:1.7rem;
-    }
 }
+
 </style>
 </head>
-<body>
 
-<div class="cursor-glow"></div>
+<body class="text-white">
 
-<nav>
-    <div class="logo">ANVAYA EVENTS</div>
+<!-- NAVBAR -->
+<nav class="fixed top-0 left-0 w-full z-50 glass px-6 md:px-16 py-5 flex items-center justify-between">
+    <h1 class="luxury-font text-4xl font-bold tracking-[5px] text-amber-300">
+        ANVAYA EVENTS
+    </h1>
 
-    <div class="nav-links">
-        <a href="#">Home</a>
-        <a href="#gallery">Gallery</a>
-        <!-- <a href="#experience">Experience</a> -->
-        <a href="#contact">Contact</a>
+    <div class="hidden md:flex gap-10 uppercase tracking-[2px] text-sm">
+        <a href="#" class="hover:text-amber-300 transition">Home</a>
+        <a href="#gallery" class="hover:text-amber-300 transition">Gallery</a>
+        <a href="#contact" class="hover:text-amber-300 transition">Contact</a>
     </div>
 </nav>
 
-<section class="hero">
+<!-- HERO -->
+<section class="relative h-screen flex items-center justify-center text-center overflow-hidden">
 
-    <video autoplay muted loop playsinline>
+    <video autoplay muted loop playsinline class="absolute inset-0 w-full h-full object-cover brightness-50">
         <source src="https://cdn.coverr.co/videos/coverr-wedding-reception-1560776306500?download=1080p" type="video/mp4">
     </video>
 
-    <div class="hero-content">
-        <div class="hero-subtitle">Luxury Event Storytelling</div>
+    <div class="absolute inset-0 hero-overlay"></div>
 
-        <h1>Moments Crafted Into Timeless Experiences</h1>
+    <div class="relative z-10 max-w-5xl px-6">
 
-        <p>
-            Anvaya Events curates extraordinary weddings, luxury celebrations, destination experiences, and cinematic event journeys designed with elegance, artistry, and emotional storytelling.
+        <p class="uppercase tracking-[6px] text-amber-300 mb-5 text-sm">
+            Luxury Event Storytelling
         </p>
 
-        <div class="hero-btns">
-            <a href="#gallery" class="btn btn-primary">Explore Gallery</a>
-            <a href="#contact" class="btn btn-outline">Book Consultation</a>
-        </div>
-    </div>
+        <h1 class="luxury-font text-5xl md:text-8xl leading-none mb-8 font-semibold">
+            Moments Crafted Into Timeless Experiences
+        </h1>
 
-</section>
+        <p class="text-gray-300 leading-8 max-w-3xl mx-auto text-lg">
+            Anvaya Events curates extraordinary weddings, destination celebrations,
+            luxury experiences, and cinematic memories with emotional storytelling.
+        </p>
 
-<section class="stats reveal">
+        <div class="flex flex-wrap justify-center gap-5 mt-10">
+            <a href="#gallery" class="bg-amber-300 text-black px-8 py-4 rounded-full font-semibold hover:scale-105 transition duration-300">
+                Explore Gallery
+            </a>
 
-    <div class="stat-box">
-        <h2>500+</h2>
-        <p>Luxury Celebrations</p>
-    </div>
-
-    <!-- <div class="stat-box">
-        <h2>12</h2>
-        <p>Countries Served</p>
-    </div> -->
-
-    <div class="stat-box">
-        <h2>98%</h2>
-        <p>Client Satisfaction</p>
-    </div>
-
-</section>
-
-<div class="section-title reveal">
-    <span>Luxury Gallery</span>
-    <h2>Curated Event Experiences</h2>
-</div>
-
-<div class="controls reveal">
-    <button class="filter-btn active">All Events</button>
-    <!-- <button class="filter-btn">Weddings</button>
-    <button class="filter-btn">Destination</button>
-    <button class="filter-btn">Luxury Decor</button>
-    <button class="filter-btn">VIP Celebrations</button> -->
-</div>
-
-<section class="gallery" id="gallery">
-
-</section>
-
-<!-- <section class="experience reveal" id="experience">
-
-    <div class="experience-grid">
-
-        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1400&auto=format&fit=crop" alt="Luxury Event">
-
-        <div class="experience-content">
-            <h2>Designed Like Cinematic Masterpieces</h2>
-
-            <p>
-                Every Anvaya Events celebration is thoughtfully curated with luxury aesthetics, emotional storytelling, immersive décor, and refined experiences that transform moments into unforgettable memories.
-            </p>
-
-            <a href="#" class="btn btn-primary">Discover Experiences</a>
+            <a href="#contact" class="border border-white/20 bg-white/5 px-8 py-4 rounded-full hover:bg-white/10 transition duration-300">
+                Book Consultation
+            </a>
         </div>
 
     </div>
 
-</section> -->
+</section>
 
-<section class="testimonials reveal">
+<!-- STATS -->
+<section class="grid grid-cols-1 md:grid-cols-2 gap-8 px-6 md:px-16 py-24">
 
-    <div class="testimonial-box">
-        <h3>
+    <div class="glass rounded-3xl p-12 text-center hover:-translate-y-2 transition duration-500">
+        <h2 class="luxury-font text-6xl text-amber-300 font-bold">500+</h2>
+        <p class="mt-4 text-gray-300">Luxury Celebrations</p>
+    </div>
+
+    <div class="glass rounded-3xl p-12 text-center hover:-translate-y-2 transition duration-500">
+        <h2 class="luxury-font text-6xl text-amber-300 font-bold">98%</h2>
+        <p class="mt-4 text-gray-300">Client Satisfaction</p>
+    </div>
+
+</section>
+
+<!-- TITLE -->
+<section class="text-center px-6 py-10">
+    <p class="uppercase tracking-[4px] text-amber-300 text-sm">
+        Luxury Gallery
+    </p>
+
+    <h2 class="luxury-font text-5xl md:text-7xl mt-4">
+        Curated Event Experiences
+    </h2>
+</section>
+
+<!-- GALLERY -->
+<section id="gallery" class="px-6 md:px-16 pb-24">
+
+    <div id="loadingSpinner" class="fixed inset-0 bg-black/95 flex items-center justify-center z-[9998]">
+        <div class="text-center">
+            <div class="w-16 h-16 border-4 border-gray-600 border-t-amber-300 rounded-full animate-spin mx-auto mb-6"></div>
+            <p class="text-gray-400 text-lg">Loading Gallery...</p>
+        </div>
+    </div>
+
+    <div id="galleryContainer" class="gallery-column"></div>
+
+    <div id="loading" class="text-center py-10 text-gray-400 text-lg">
+        No images found.
+    </div>
+
+</section>
+
+<!-- TESTIMONIAL -->
+<section class="px-6 md:px-16 py-24">
+
+    <div class="glass rounded-[40px] max-w-5xl mx-auto p-10 md:p-16 text-center">
+
+        <h3 class="luxury-font text-3xl md:text-5xl leading-relaxed">
             “Anvaya Events transformed our wedding into a cinematic dream that felt straight out of a luxury editorial.”
         </h3>
 
-        <p>— SIVASUNDAR</p>
-        <p> +91 8870881716</p>
+        <p class="mt-8 tracking-[3px] text-amber-300 uppercase">
+            — SIVASUNDAR
+        </p>
+
+        <p class="mt-2 text-gray-300">
+            +91 8870881716
+        </p>
+
     </div>
 
 </section>
 
-<footer id="contact">
+<!-- FOOTER -->
+<footer id="contact" class="border-t border-white/10 py-20 px-6 text-center">
 
-    <h2>Anvaya Events</h2>
+    <h2 class="luxury-font text-5xl text-amber-300 mb-6">
+        Anvaya Events
+    </h2>
 
-    <p>
-        We transform celebrations into immersive luxury experiences through elegant storytelling, refined aesthetics, and unforgettable event craftsmanship.
+    <p class="max-w-3xl mx-auto text-gray-400 leading-8">
+        We transform celebrations into immersive luxury experiences through elegant storytelling and unforgettable event craftsmanship.
     </p>
 
 </footer>
 
-<div class="lightbox" id="lightbox">
-    <span class="close-btn">×</span>
-    <span class="prev-btn">‹</span>
-    <img id="lightbox-img">
-    <span class="next-btn">›</span>
+<!-- LIGHTBOX -->
+<div id="lightbox" class="lightbox fixed inset-0 bg-black/95 z-[9999] items-center justify-center p-5 group">
+
+    <!-- Close Button -->
+    <button id="closeBtn" class="absolute top-5 right-8 text-5xl text-white lightbox-btn lightbox-controls" title="Close (Esc or Q)">
+        ×
+    </button>
+
+    <!-- Previous Button -->
+    <button id="prevBtn" class="absolute left-5 md:left-8 top-1/2 -translate-y-1/2 text-4xl md:text-5xl text-white lightbox-btn lightbox-controls" title="Previous (← or P)">
+        ‹
+    </button>
+
+    <!-- Image Container with rotation -->
+    <div class="relative flex items-center justify-center">
+        <img id="lightboxImg" class="max-w-[95%] max-h-[90vh] rounded-3xl shadow-2xl" />
+    </div>
+
+    <!-- Next Button -->
+    <button id="nextBtn" class="absolute right-5 md:right-8 top-1/2 -translate-y-1/2 text-4xl md:text-5xl text-white lightbox-btn lightbox-controls" title="Next (→ or N)">
+        ›
+    </button>
+
+    <!-- Rotate Button (Top Center) -->
+    <button id="rotateBtn" class="absolute top-5 left-1/2 -translate-x-1/2 bg-amber-400/20 border-2 border-amber-400 text-amber-400 px-4 py-2 rounded-full font-semibold lightbox-btn lightbox-controls hover:bg-amber-400/40" title="Rotate (R)">
+        ↻ Rotate
+    </button>
+
+    <!-- Mobile bottom controls -->
+    <div class="absolute bottom-5 left-0 right-0 flex justify-center gap-2 md:gap-4 md:hidden flex-wrap px-4 control-panel">
+        <button id="mobilePrevBtn" class="bg-amber-300/20 border border-amber-300 text-amber-300 px-3 py-2 rounded-full text-xs font-semibold hover:bg-amber-300/40 transition lightbox-btn">
+            ← Prev
+        </button>
+        <button id="mobileRotateBtn" class="bg-blue-500/20 border border-blue-500 text-blue-500 px-3 py-2 rounded-full text-xs font-semibold hover:bg-blue-500/40 transition lightbox-btn">
+            ↻ Rotate
+        </button>
+        <button id="mobileCloseBtn" class="bg-red-500/20 border border-red-500 text-red-500 px-3 py-2 rounded-full text-xs font-semibold hover:bg-red-500/40 transition lightbox-btn">
+            Close
+        </button>
+        <button id="mobileNextBtn" class="bg-amber-300/20 border border-amber-300 text-amber-300 px-3 py-2 rounded-full text-xs font-semibold hover:bg-amber-300/40 transition lightbox-btn">
+            Next →
+        </button>
+    </div>
+
+    <!-- Shortcuts info -->
+    <div class="absolute bottom-5 right-5 hidden md:block text-xs text-gray-500 bg-black/50 p-3 rounded-lg lightbox-controls shortcuts-info">
+        <p class="font-semibold mb-2 text-amber-400">⌨ Shortcuts:</p>
+        <p class="text-gray-400">← / P = Previous | → / N = Next</p>
+        <p class="text-gray-400">R = Rotate | Space = Next</p>
+        <p class="text-gray-400">Esc / Q = Close</p>
+        <p class="text-gray-400 mt-2 border-t border-gray-600 pt-2">Swipe = Navigate | Scroll = Navigate</p>
+    </div>
+
+    <!-- Image counter/indicator -->
+    <div class="absolute top-5 left-5 bg-black/50 text-amber-300 px-4 py-2 rounded-full text-sm font-semibold lightbox-controls">
+        <span id="imageCounter">1</span> / <span id="imageTotal">1</span>
+    </div>
+
 </div>
 
 <script>
-const gallery = document.querySelector('.gallery');
+
+const galleryContainer = document.getElementById('galleryContainer');
+const loading = document.getElementById('loading');
 const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightbox-img');
+const lightboxImg = document.getElementById('lightboxImg');
 
-let allImages = [];
+let images = [];
 let currentIndex = 0;
-let touchStartX = 0;
-let touchEndX = 0;
+let currentRotation = 0;
+let controlsHideTimeout = null;
 
-async function fetchAndRender(){
+// Fetch JSON
+async function fetchGallery(){
 
     try{
 
-        const response = await fetch('data.json');
+        console.log('Starting to fetch data.json...');
+
+        const response = await fetch('./data.json');
+        
+        console.log('Response status:', response.status);
+        
+        if(!response.ok){
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
         const data = await response.json();
+        
+        console.log('JSON parsed successfully. Total items:', data.length);
 
-        const seen = new Set();
+        // Filter valid images
+        images = data.filter(item => {
 
-        allImages = data.filter(item => {
-
-            const hasImg = item.extensions && item.extensions.jpg;
-            const unique = !seen.has(item.image_name);
-            const validPath = item.extensions.jpg !== 'placeholder.jpg';
-
-            if(hasImg && unique && validPath){
-                seen.add(item.image_name);
-                return true;
-            }
-
-            return false;
-
+            return item.extensions &&
+                   (item.extensions.jpg || item.extensions.jpeg || item.extensions.png);
         });
+
+        console.log('Filtered images:', images.length);
+
+        if(images.length === 0){
+            document.getElementById('loadingSpinner').style.display = 'none';
+            loading.innerHTML = 'No valid images found in data.json.';
+            return;
+        }
 
         renderGallery();
 
     }catch(error){
-        console.error('Unable to load gallery', error);
+
+        console.error('Gallery fetch error:', error);
+        console.error('Error details:', error.message);
+
+        document.getElementById('loadingSpinner').style.display = 'none';
+        loading.innerHTML = `Failed to load gallery images: ${error.message}`;
     }
+}
+
+function getImageUrl(item){
+
+    // Use local images with fallback
+    if(item.extensions.jpg){
+        return `images/${item.extensions.jpg}`;
+    }
+    if(item.extensions.jpeg){
+        return `images/${item.extensions.jpeg}`;
+    }
+    if(item.extensions.png){
+        return `images/${item.extensions.png}`;
+    }
+    if(item.link){
+        return item.link;
+    }
+    return null;
 }
 
 function renderGallery(){
 
-    gallery.innerHTML = '';
+    galleryContainer.innerHTML = '';
 
-    allImages.forEach((item,index)=>{
+    if(images.length === 0){
+        document.getElementById('loadingSpinner').style.display = 'none';
+        loading.innerHTML = 'No images found.';
+        return;
+    }
 
-        const imgPath = `images/${item.extensions.jpg}`;
+    let loadedCount = 0;
+    let processedCount = 0;
+    const totalImages = images.length;
+
+    images.forEach((item,index)=>{
+
+        const imageUrl = getImageUrl(item);
+
+        if(!imageUrl){
+            processedCount++;
+            checkAllLoaded();
+            return;
+        }
 
         const card = document.createElement('div');
-        card.className = 'gallery-card reveal';
-
-        const image = document.createElement('img');
-        image.src = imgPath;
-        image.alt = 'Luxury Event';
-        image.loading = 'lazy';
-
-        image.onerror = ()=>{
-            card.remove();
-        };
-
-        image.onload = ()=>{
-
-            if(
-                image.naturalWidth < 250 ||
-                image.naturalHeight < 250 ||
-                image.src.includes('placeholder')
-            ){
-                card.remove();
-            }
-        };
+        card.className = 'gallery-card group relative overflow-hidden rounded-[30px] bg-neutral-900 shadow-2xl';
 
         card.innerHTML = `
-            <div class="overlay">
-                <div class="tag">Luxury Experience</div>
-                <h3>Anvaya Events ${index + 1}</h3>
-                <p>Timeless storytelling with luxury aesthetics and unforgettable emotional experiences.</p>
+
+            <img
+                src="${imageUrl}"
+                alt="Anvaya Event"
+                class="w-full rounded-[30px] object-cover"
+            >
+
+            <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent flex flex-col justify-end p-8">
+
+                <div class="bg-amber-300/20 border border-amber-300/20 text-amber-100 text-xs tracking-[2px] uppercase px-4 py-2 rounded-full w-max mb-5">
+                    Luxury Experience
+                </div>
+
+                <h3 class="luxury-font text-4xl mb-3">
+                    Anvaya Events ${index + 1}
+                </h3>
+
+                <p class="text-gray-300 leading-7">
+                    Elegant storytelling with timeless luxury aesthetics.
+                </p>
+
             </div>
         `;
 
-        card.prepend(image);
+        card.addEventListener('click',()=>{
+            openLightbox(index);
+        });
 
-        card.onclick = ()=>openLightbox(index);
-
-        gallery.appendChild(card);
-
-        observer.observe(card);
+        galleryContainer.appendChild(card);
 
     });
-}
 
-function preloadImage(src, success, fail){
-
-    const img = new Image();
-
-    img.onload = success;
-    img.onerror = fail || (()=>{});
-
-    img.src = src;
+    // Hide spinner after a short delay to let images start loading
+    setTimeout(() => {
+        document.getElementById('loadingSpinner').style.display = 'none';
+        console.log(`Gallery rendered with ${totalImages} images`);
+    }, 500);
 }
 
 function openLightbox(index){
 
     currentIndex = index;
+    currentRotation = 0;
 
-    const imgPath = `images/${allImages[index].extensions.jpg}`;
+    lightbox.style.display = 'flex';
 
-    preloadImage(imgPath, ()=>{
+    lightboxImg.src = getImageUrl(images[currentIndex]);
+    lightboxImg.style.transform = `rotate(${currentRotation}deg)`;
 
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-
-        lightboxImg.style.opacity = '0';
-        lightboxImg.style.transform = 'scale(.96)';
-
-        setTimeout(()=>{
-            lightboxImg.src = imgPath;
-            lightboxImg.style.opacity = '1';
-            lightboxImg.style.transform = 'scale(1)';
-        },120);
-
-    });
+    document.body.style.overflow = 'hidden';
+    
+    // Update counter
+    updateImageCounter();
+    
+    // Show controls
+    showLightboxControls();
 }
 
 function closeLightbox(){
+
     lightbox.style.display = 'none';
+
     document.body.style.overflow = 'auto';
 }
 
 function nextImage(){
 
-    if(!allImages.length) return;
+    currentIndex = (currentIndex + 1) % images.length;
+    currentRotation = 0;
 
-    currentIndex = (currentIndex + 1) % allImages.length;
-
-    const nextPath = `images/${allImages[currentIndex].extensions.jpg}`;
-
-    preloadImage(nextPath, ()=>{
-
-        lightboxImg.style.opacity = '0';
-
-        setTimeout(()=>{
-            lightboxImg.src = nextPath;
-            lightboxImg.style.opacity = '1';
-        },120);
-
-    }, ()=>{
-        nextImage();
-    });
+    lightboxImg.src = getImageUrl(images[currentIndex]);
+    lightboxImg.style.transform = `rotate(${currentRotation}deg)`;
+    
+    updateImageCounter();
+    showLightboxControls();
 }
 
 function prevImage(){
 
-    if(!allImages.length) return;
+    currentIndex = (currentIndex - 1 + images.length) % images.length;
+    currentRotation = 0;
 
-    currentIndex = (currentIndex - 1 + allImages.length) % allImages.length;
+    lightboxImg.src = getImageUrl(images[currentIndex]);
+    lightboxImg.style.transform = `rotate(${currentRotation}deg)`;
+    
+    updateImageCounter();
+    showLightboxControls();
+}
 
-    const prevPath = `images/${allImages[currentIndex].extensions.jpg}`;
+function rotateImage(){
+    currentRotation = (currentRotation + 90) % 360;
+    lightboxImg.style.transform = `rotate(${currentRotation}deg)`;
+    showLightboxControls();
+}
 
-    preloadImage(prevPath, ()=>{
+function updateImageCounter(){
+    const counter = document.getElementById('imageCounter');
+    const total = document.getElementById('imageTotal');
+    if(counter) counter.textContent = currentIndex + 1;
+    if(total) total.textContent = images.length;
+}
 
-        lightboxImg.style.opacity = '0';
-
-        setTimeout(()=>{
-            lightboxImg.src = prevPath;
-            lightboxImg.style.opacity = '1';
-        },120);
-
-    }, ()=>{
-        prevImage();
+function showLightboxControls(){
+    const controls = document.querySelectorAll('.lightbox-controls');
+    controls.forEach(control => {
+        control.classList.remove('hidden');
     });
-}
-
-document.querySelector('.close-btn').onclick = closeLightbox;
-document.querySelector('.next-btn').onclick = nextImage;
-document.querySelector('.prev-btn').onclick = prevImage;
-
-lightbox.onclick = (e)=>{
-    if(e.target === lightbox){
-        closeLightbox();
-    }
-};
-
-lightbox.addEventListener('touchstart',(e)=>{
-    touchStartX = e.changedTouches[0].screenX;
-});
-
-lightbox.addEventListener('touchend',(e)=>{
-
-    touchEndX = e.changedTouches[0].screenX;
-
-    if(touchEndX < touchStartX - 50){
-        nextImage();
-    }
-
-    if(touchEndX > touchStartX + 50){
-        prevImage();
-    }
-});
-
-lightbox.addEventListener('wheel',(e)=>{
-
-    if(e.deltaY > 0){
-        nextImage();
-    }else{
-        prevImage();
-    }
-});
-
-lightbox.addEventListener('mousemove',(e)=>{
-
-    if(lightbox.style.display !== 'flex') return;
-
-    const x = (e.clientX / window.innerWidth - 0.5) * 10;
-    const y = (e.clientY / window.innerHeight - 0.5) * 10;
-
-    lightboxImg.style.transform = `scale(1.03) translate(${x}px, ${y}px)`;
-});
-
-lightbox.addEventListener('mouseleave',()=>{
-    lightboxImg.style.transform = 'scale(1)';
-});
-
-document.addEventListener('keydown',(e)=>{
-
-    if(lightbox.style.display === 'flex'){
-        if(e.key === 'ArrowRight') nextImage();
-        if(e.key === 'ArrowLeft') prevImage();
-        if(e.key === 'Escape') closeLightbox();
-    }
-
-});
-
-const glow = document.querySelector('.cursor-glow');
-
-window.addEventListener('mousemove',(e)=>{
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
-});
-
-const reveals = document.querySelectorAll('.reveal');
-
-const observer = new IntersectionObserver((entries)=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-            entry.target.style.transition = '1.2s cubic-bezier(.22,.61,.36,1)';
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
-        }
-
-    });
-
-},{threshold:.15});
-
-reveals.forEach(el=>observer.observe(el));
-
-window.onload = fetchAndRender;
-
-gsap.from('.hero-subtitle',{
-    y:60,
-    opacity:0,
-    duration:1.2
-});
-
-gsap.from('.hero h1',{
-    y:120,
-    opacity:0,
-    duration:1.6,
-    ease:'power4.out'
-});
-
-gsap.from('.hero p',{
-    y:80,
-    opacity:0,
-    duration:1.4,
-    delay:.4
-});
-
-gsap.from('.hero-btns',{
-    y:80,
-    opacity:0,
-    duration:1.4,
-    delay:.7
-});
-
-</script>
-
-</body>
-</html>
-=======
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Anvaya Events — Luxury Experiences</title>
-
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-
-<style>
-:root{
-    --primary:#d6b36a;
-    --dark:#060606;
-    --card:#111111;
-    --text:#ffffff;
-    --muted:#c6c6c6;
-    --glass:rgba(255,255,255,.06);
-    --border:rgba(255,255,255,.08);
-    --transition:all .5s cubic-bezier(.22,.61,.36,1);
-    --shadow:0 30px 80px rgba(0,0,0,.45);
-}
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-    background:var(--dark);
-    color:var(--text);
-    font-family:'Inter',sans-serif;
-    overflow-x:hidden;
-}
-
-body::before{
-    content:"";
-    position:fixed;
-    inset:0;
-    background:
-    radial-gradient(circle at top left, rgba(214,179,106,.12), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(214,179,106,.08), transparent 30%),
-    radial-gradient(circle at center, rgba(255,255,255,.02), transparent 40%);
-    z-index:-2;
-}
-
-.cursor-glow{
-    position:fixed;
-    width:340px;
-    height:340px;
-    border-radius:50%;
-    background:radial-gradient(circle, rgba(214,179,106,.12), transparent 70%);
-    pointer-events:none;
-    transform:translate(-50%,-50%);
-    z-index:-1;
-    mix-blend-mode:screen;
-}
-
-nav{
-    position:fixed;
-    top:0;
-    width:100%;
-    z-index:1000;
-    padding:22px 6%;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    backdrop-filter:blur(20px);
-    background:rgba(0,0,0,.45);
-    border-bottom:1px solid var(--border);
-}
-
-.logo{
-    font-family:'Cormorant Garamond',serif;
-    color:var(--primary);
-    font-size:2.2rem;
-    font-weight:700;
-    letter-spacing:4px;
-}
-
-.nav-links{
-    display:flex;
-    gap:38px;
-}
-
-.nav-links a{
-    text-decoration:none;
-    color:var(--text);
-    text-transform:uppercase;
-    letter-spacing:2px;
-    font-size:.82rem;
-    position:relative;
-}
-
-.nav-links a::after{
-    content:"";
-    position:absolute;
-    left:0;
-    bottom:-8px;
-    width:0;
-    height:1px;
-    background:var(--primary);
-    transition:var(--transition);
-}
-
-.nav-links a:hover::after{
-    width:100%;
-}
-
-.hero{
-    position:relative;
-    height:100vh;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    text-align:center;
-    overflow:hidden;
-}
-
-.hero video{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    filter:brightness(.45);
-}
-
-.hero::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(to bottom, rgba(0,0,0,.2), rgba(0,0,0,.82));
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-    max-width:1000px;
-    padding:20px;
-}
-
-.hero-subtitle{
-    color:var(--primary);
-    text-transform:uppercase;
-    letter-spacing:6px;
-    margin-bottom:20px;
-    font-size:.9rem;
-}
-
-.hero h1{
-    font-family:'Cormorant Garamond',serif;
-    font-size:6rem;
-    line-height:.95;
-    margin-bottom:24px;
-}
-
-.hero p{
-    max-width:760px;
-    margin:auto;
-    line-height:1.9;
-    color:var(--muted);
-    font-size:1.05rem;
-}
-
-.hero-btns{
-    margin-top:42px;
-    display:flex;
-    justify-content:center;
-    gap:18px;
-    flex-wrap:wrap;
-}
-
-.btn{
-    padding:16px 34px;
-    border-radius:50px;
-    text-decoration:none;
-    font-weight:600;
-    letter-spacing:1px;
-    transition:var(--transition);
-}
-
-.btn-primary{
-    background:var(--primary);
-    color:#111;
-}
-
-.btn-primary:hover{
-    transform:translateY(-5px);
-    box-shadow:0 18px 40px rgba(214,179,106,.28);
-}
-
-.btn-outline{
-    border:1px solid rgba(255,255,255,.18);
-    color:#fff;
-    background:rgba(255,255,255,.04);
-}
-
-.btn-outline:hover{
-    background:rgba(255,255,255,.08);
-}
-
-.stats{
-    padding:110px 6%;
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-    gap:26px;
-}
-
-.stat-box{
-    background:var(--glass);
-    border:1px solid var(--border);
-    border-radius:28px;
-    padding:50px 30px;
-    backdrop-filter:blur(20px);
-    text-align:center;
-    transition:var(--transition);
-}
-
-.stat-box:hover{
-    transform:translateY(-10px);
-}
-
-.stat-box h2{
-    color:var(--primary);
-    font-family:'Cormorant Garamond',serif;
-    font-size:3.5rem;
-}
-
-.stat-box p{
-    margin-top:10px;
-    color:var(--muted);
-}
-
-.section-title{
-    text-align:center;
-    padding:40px 20px 20px;
-}
-
-.section-title span{
-    color:var(--primary);
-    letter-spacing:4px;
-    text-transform:uppercase;
-    font-size:.8rem;
-}
-
-.section-title h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:4rem;
-    margin-top:14px;
-}
-
-.controls{
-    padding:40px 6%;
-    display:flex;
-    justify-content:center;
-    flex-wrap:wrap;
-    gap:16px;
-}
-
-.filter-btn{
-    border:none;
-    cursor:pointer;
-    padding:14px 26px;
-    border-radius:40px;
-    background:rgba(255,255,255,.05);
-    color:#fff;
-    border:1px solid var(--border);
-    transition:var(--transition);
-}
-
-.filter-btn:hover,
-.filter-btn.active{
-    background:var(--primary);
-    color:#111;
-}
-
-.gallery{
-    column-count:3;
-    column-gap:28px;
-    padding:30px 6% 120px;
-}
-
-.gallery-card{
-    position:relative;
-    overflow:hidden;
-    border-radius:32px;
-    margin-bottom:28px;
-    break-inside:avoid;
-    background:var(--card);
-    cursor:pointer;
-    box-shadow:var(--shadow);
-}
-
-.gallery-card::after{
-    content:"";
-    position:absolute;
-    inset:0;
-    background:linear-gradient(120deg, transparent 20%, rgba(255,255,255,.08), transparent 80%);
-    transform:translateX(-120%);
-    transition:1.2s ease;
-}
-
-.gallery-card:hover::after{
-    transform:translateX(120%);
-}
-
-.gallery-card img{
-    width:100%;
-    display:block;
-    transition:transform 1.2s ease;
-    filter:brightness(.86);
-}
-
-.gallery-card:hover img{
-    transform:scale(1.08);
-    filter:brightness(1);
-}
-
-.overlay{
-    position:absolute;
-    inset:0;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-end;
-    padding:30px;
-    background:linear-gradient(to top, rgba(0,0,0,.88), rgba(0,0,0,.15));
-}
-
-.tag{
-    width:max-content;
-    padding:8px 16px;
-    border-radius:30px;
-    background:rgba(214,179,106,.16);
-    border:1px solid rgba(214,179,106,.22);
-    color:#f8ebc7;
-    margin-bottom:16px;
-    font-size:.78rem;
-    letter-spacing:1px;
-}
-
-.overlay h3{
-    font-family:'Cormorant Garamond',serif;
-    font-size:2rem;
-    margin-bottom:8px;
-}
-
-.overlay p{
-    color:#d5d5d5;
-    line-height:1.7;
-}
-
-.experience{
-    padding:120px 6%;
-}
-
-.experience-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:60px;
-    align-items:center;
-}
-
-.experience img{
-    width:100%;
-    border-radius:32px;
-    box-shadow:var(--shadow);
-}
-
-.experience-content h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:4rem;
-    margin-bottom:20px;
-}
-
-.experience-content p{
-    color:var(--muted);
-    line-height:2;
-    margin-bottom:28px;
-}
-
-.testimonials{
-    padding:120px 6%;
-}
-
-.testimonial-box{
-    max-width:900px;
-    margin:auto;
-    padding:60px;
-    border-radius:36px;
-    background:rgba(255,255,255,.04);
-    border:1px solid var(--border);
-    text-align:center;
-    backdrop-filter:blur(16px);
-}
-
-.testimonial-box h3{
-    font-family:'Cormorant Garamond',serif;
-    font-size:2.4rem;
-    line-height:1.4;
-}
-
-.testimonial-box p{
-    margin-top:22px;
-    color:var(--primary);
-    letter-spacing:2px;
-}
-
-footer{
-    padding:90px 6%;
-    text-align:center;
-    border-top:1px solid var(--border);
-}
-
-footer h2{
-    font-family:'Cormorant Garamond',serif;
-    font-size:3rem;
-    color:var(--primary);
-    margin-bottom:16px;
-}
-
-footer p{
-    color:var(--muted);
-    max-width:650px;
-    margin:auto;
-    line-height:1.9;
-}
-
-.lightbox{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.96);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:3000;
-    padding:30px;
-}
-
-.lightbox img{
-    max-width:92%;
-    max-height:90vh;
-    border-radius:24px;
-}
-
-.close-btn,
-.prev-btn,
-.next-btn{
-    position:absolute;
-    color:#fff;
-    cursor:pointer;
-    user-select:none;
-}
-
-.close-btn{
-    top:30px;
-    right:40px;
-    font-size:3rem;
-}
-
-.prev-btn,
-.next-btn{
-    top:50%;
-    transform:translateY(-50%);
-    font-size:3rem;
-}
-
-.prev-btn{left:40px;}
-.next-btn{right:40px;}
-
-.reveal{
-    opacity:0;
-    transform:translateY(80px);
-}
-
-@media(max-width:1000px){
-    .gallery{
-        column-count:2;
-    }
-
-    .experience-grid{
-        grid-template-columns:1fr;
-    }
-
-    .hero h1{
-        font-size:4.5rem;
-    }
-}
-
-@media(max-width:700px){
-    .nav-links{
-        display:none;
-    }
-
-    .gallery{
-        column-count:1;
-    }
-
-    .hero h1{
-        font-size:3.2rem;
-    }
-
-    .section-title h2,
-    .experience-content h2{
-        font-size:2.8rem;
-    }
-
-    .testimonial-box{
-        padding:40px 24px;
-    }
-
-    .testimonial-box h3{
-        font-size:1.7rem;
-    }
-}
-</style>
-</head>
-<body>
-
-<div class="cursor-glow"></div>
-
-<nav>
-    <div class="logo">ANVAYA EVENTS</div>
-
-    <div class="nav-links">
-        <a href="#">Home</a>
-        <a href="#gallery">Gallery</a>
-        <!-- <a href="#experience">Experience</a> -->
-        <a href="#contact">Contact</a>
-    </div>
-</nav>
-
-<section class="hero">
-
-    <video autoplay muted loop playsinline>
-        <source src="https://cdn.coverr.co/videos/coverr-wedding-reception-1560776306500?download=1080p" type="video/mp4">
-    </video>
-
-    <div class="hero-content">
-        <div class="hero-subtitle">Luxury Event Storytelling</div>
-
-        <h1>Moments Crafted Into Timeless Experiences</h1>
-
-        <p>
-            Anvaya Events curates extraordinary weddings, luxury celebrations, destination experiences, and cinematic event journeys designed with elegance, artistry, and emotional storytelling.
-        </p>
-
-        <div class="hero-btns">
-            <a href="#gallery" class="btn btn-primary">Explore Gallery</a>
-            <a href="#contact" class="btn btn-outline">Book Consultation</a>
-        </div>
-    </div>
-
-</section>
-
-<section class="stats reveal">
-
-    <div class="stat-box">
-        <h2>500+</h2>
-        <p>Luxury Celebrations</p>
-    </div>
-
-    <!-- <div class="stat-box">
-        <h2>12</h2>
-        <p>Countries Served</p>
-    </div> -->
-
-    <div class="stat-box">
-        <h2>98%</h2>
-        <p>Client Satisfaction</p>
-    </div>
-
-</section>
-
-<div class="section-title reveal">
-    <span>Luxury Gallery</span>
-    <h2>Curated Event Experiences</h2>
-</div>
-
-<div class="controls reveal">
-    <button class="filter-btn active">All Events</button>
-    <!-- <button class="filter-btn">Weddings</button>
-    <button class="filter-btn">Destination</button>
-    <button class="filter-btn">Luxury Decor</button>
-    <button class="filter-btn">VIP Celebrations</button> -->
-</div>
-
-<section class="gallery" id="gallery">
-
-</section>
-
-<!-- <section class="experience reveal" id="experience">
-
-    <div class="experience-grid">
-
-        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?q=80&w=1400&auto=format&fit=crop" alt="Luxury Event">
-
-        <div class="experience-content">
-            <h2>Designed Like Cinematic Masterpieces</h2>
-
-            <p>
-                Every Anvaya Events celebration is thoughtfully curated with luxury aesthetics, emotional storytelling, immersive décor, and refined experiences that transform moments into unforgettable memories.
-            </p>
-
-            <a href="#" class="btn btn-primary">Discover Experiences</a>
-        </div>
-
-    </div>
-
-</section> -->
-
-<section class="testimonials reveal">
-
-    <div class="testimonial-box">
-        <h3>
-            “Anvaya Events transformed our wedding into a cinematic dream that felt straight out of a luxury editorial.”
-        </h3>
-
-        <p>— SIVASUNDAR</p>
-        <p> +91 8870881716</p>
-    </div>
-
-</section>
-
-<footer id="contact">
-
-    <h2>Anvaya Events</h2>
-
-    <p>
-        We transform celebrations into immersive luxury experiences through elegant storytelling, refined aesthetics, and unforgettable event craftsmanship.
-    </p>
-
-</footer>
-
-<div class="lightbox" id="lightbox">
-    <span class="close-btn">×</span>
-    <span class="prev-btn">‹</span>
-    <img id="lightbox-img">
-    <span class="next-btn">›</span>
-</div>
-
-<script>
-const gallery = document.querySelector('.gallery');
-const lightbox = document.getElementById('lightbox');
-const lightboxImg = document.getElementById('lightbox-img');
-
-let allImages = [];
-let currentIndex = 0;
-let touchStartX = 0;
-let touchEndX = 0;
-
-async function fetchAndRender(){
-
-    try{
-
-        const response = await fetch('data.json');
-        const data = await response.json();
-
-        const seen = new Set();
-
-        allImages = data.filter(item => {
-
-            const hasImg = item.extensions && item.extensions.jpg;
-            const unique = !seen.has(item.image_name);
-            const validPath = item.extensions.jpg !== 'placeholder.jpg';
-
-            if(hasImg && unique && validPath){
-                seen.add(item.image_name);
-                return true;
-            }
-
-            return false;
-
+    
+    // Clear existing timeout
+    if(controlsHideTimeout) clearTimeout(controlsHideTimeout);
+    
+    // Hide controls after 5 seconds of inactivity
+    controlsHideTimeout = setTimeout(() => {
+        controls.forEach(control => {
+            control.classList.add('hidden');
         });
-
-        renderGallery();
-
-    }catch(error){
-        console.error('Unable to load gallery', error);
-    }
+    }, 5000);
 }
 
-function renderGallery(){
+// Events
 
-    gallery.innerHTML = '';
+document.getElementById('closeBtn').onclick = closeLightbox;
+document.getElementById('nextBtn').onclick = nextImage;
+document.getElementById('prevBtn').onclick = prevImage;
+document.getElementById('rotateBtn').onclick = rotateImage;
 
-    allImages.forEach((item,index)=>{
+// Mobile button events
+document.getElementById('mobileNextBtn').onclick = nextImage;
+document.getElementById('mobilePrevBtn').onclick = prevImage;
+document.getElementById('mobileCloseBtn').onclick = closeLightbox;
+document.getElementById('mobileRotateBtn').onclick = rotateImage;
 
-        const imgPath = `images/${item.extensions.jpg}`;
-
-        const card = document.createElement('div');
-        card.className = 'gallery-card reveal';
-
-        const image = document.createElement('img');
-        image.src = imgPath;
-        image.alt = 'Luxury Event';
-        image.loading = 'lazy';
-
-        image.onerror = ()=>{
-            card.remove();
-        };
-
-        image.onload = ()=>{
-
-            if(
-                image.naturalWidth < 250 ||
-                image.naturalHeight < 250 ||
-                image.src.includes('placeholder')
-            ){
-                card.remove();
-            }
-        };
-
-        card.innerHTML = `
-            <div class="overlay">
-                <div class="tag">Luxury Experience</div>
-                <h3>Anvaya Events ${index + 1}</h3>
-                <p>Timeless storytelling with luxury aesthetics and unforgettable emotional experiences.</p>
-            </div>
-        `;
-
-        card.prepend(image);
-
-        card.onclick = ()=>openLightbox(index);
-
-        gallery.appendChild(card);
-
-        observer.observe(card);
-
-    });
-}
-
-function preloadImage(src, success, fail){
-
-    const img = new Image();
-
-    img.onload = success;
-    img.onerror = fail || (()=>{});
-
-    img.src = src;
-}
-
-function openLightbox(index){
-
-    currentIndex = index;
-
-    const imgPath = `images/${allImages[index].extensions.jpg}`;
-
-    preloadImage(imgPath, ()=>{
-
-        lightbox.style.display = 'flex';
-        document.body.style.overflow = 'hidden';
-
-        lightboxImg.style.opacity = '0';
-        lightboxImg.style.transform = 'scale(.96)';
-
-        setTimeout(()=>{
-            lightboxImg.src = imgPath;
-            lightboxImg.style.opacity = '1';
-            lightboxImg.style.transform = 'scale(1)';
-        },120);
-
-    });
-}
-
-function closeLightbox(){
-    lightbox.style.display = 'none';
-    document.body.style.overflow = 'auto';
-}
-
-function nextImage(){
-
-    if(!allImages.length) return;
-
-    currentIndex = (currentIndex + 1) % allImages.length;
-
-    const nextPath = `images/${allImages[currentIndex].extensions.jpg}`;
-
-    preloadImage(nextPath, ()=>{
-
-        lightboxImg.style.opacity = '0';
-
-        setTimeout(()=>{
-            lightboxImg.src = nextPath;
-            lightboxImg.style.opacity = '1';
-        },120);
-
-    }, ()=>{
-        nextImage();
-    });
-}
-
-function prevImage(){
-
-    if(!allImages.length) return;
-
-    currentIndex = (currentIndex - 1 + allImages.length) % allImages.length;
-
-    const prevPath = `images/${allImages[currentIndex].extensions.jpg}`;
-
-    preloadImage(prevPath, ()=>{
-
-        lightboxImg.style.opacity = '0';
-
-        setTimeout(()=>{
-            lightboxImg.src = prevPath;
-            lightboxImg.style.opacity = '1';
-        },120);
-
-    }, ()=>{
-        prevImage();
-    });
-}
-
-document.querySelector('.close-btn').onclick = closeLightbox;
-document.querySelector('.next-btn').onclick = nextImage;
-document.querySelector('.prev-btn').onclick = prevImage;
-
-lightbox.onclick = (e)=>{
+lightbox.addEventListener('click',(e)=>{
     if(e.target === lightbox){
         closeLightbox();
     }
-};
+});
 
-lightbox.addEventListener('touchstart',(e)=>{
+// Mouse wheel navigation
+lightbox.addEventListener('wheel', (e) => {
+    if(lightbox.style.display === 'flex'){
+        e.preventDefault();
+        if(e.deltaY > 0) nextImage();
+        else prevImage();
+    }
+}, { passive: false });
+
+// Touch swipe navigation
+let touchStartX = 0;
+let touchStartY = 0;
+let touchEndX = 0;
+let touchEndY = 0;
+
+lightbox.addEventListener('touchstart', (e) => {
     touchStartX = e.changedTouches[0].screenX;
-});
+    touchStartY = e.changedTouches[0].screenY;
+}, false);
 
-lightbox.addEventListener('touchend',(e)=>{
-
+lightbox.addEventListener('touchend', (e) => {
     touchEndX = e.changedTouches[0].screenX;
+    touchEndY = e.changedTouches[0].screenY;
+    handleSwipe();
+}, false);
 
-    if(touchEndX < touchStartX - 50){
-        nextImage();
+function handleSwipe(){
+    const diffX = touchEndX - touchStartX;
+    const diffY = touchEndY - touchStartY;
+    
+    // Horizontal swipe (at least 50px and more horizontal than vertical)
+    if(Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50){
+        if(diffX > 0) prevImage();  // Swipe right = previous
+        else nextImage();            // Swipe left = next
     }
+}
 
-    if(touchEndX > touchStartX + 50){
-        prevImage();
-    }
-});
-
-lightbox.addEventListener('wheel',(e)=>{
-
-    if(e.deltaY > 0){
-        nextImage();
-    }else{
-        prevImage();
-    }
-});
-
-lightbox.addEventListener('mousemove',(e)=>{
-
-    if(lightbox.style.display !== 'flex') return;
-
-    const x = (e.clientX / window.innerWidth - 0.5) * 10;
-    const y = (e.clientY / window.innerHeight - 0.5) * 10;
-
-    lightboxImg.style.transform = `scale(1.03) translate(${x}px, ${y}px)`;
-});
-
-lightbox.addEventListener('mouseleave',()=>{
-    lightboxImg.style.transform = 'scale(1)';
-});
-
+// Keyboard navigation with enhanced shortcuts
 document.addEventListener('keydown',(e)=>{
 
     if(lightbox.style.display === 'flex'){
-        if(e.key === 'ArrowRight') nextImage();
-        if(e.key === 'ArrowLeft') prevImage();
-        if(e.key === 'Escape') closeLightbox();
-    }
-
-});
-
-const glow = document.querySelector('.cursor-glow');
-
-window.addEventListener('mousemove',(e)=>{
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
-});
-
-const reveals = document.querySelectorAll('.reveal');
-
-const observer = new IntersectionObserver((entries)=>{
-
-    entries.forEach(entry=>{
-
-        if(entry.isIntersecting){
-            entry.target.style.transition = '1.2s cubic-bezier(.22,.61,.36,1)';
-            entry.target.style.opacity = '1';
-            entry.target.style.transform = 'translateY(0)';
+        switch(e.key){
+            case 'ArrowRight':
+            case 'n':
+            case 'N':
+            case ' ':
+                e.preventDefault();
+                nextImage();
+                break;
+            case 'ArrowLeft':
+            case 'p':
+            case 'P':
+                e.preventDefault();
+                prevImage();
+                break;
+            case 'Escape':
+            case 'q':
+            case 'Q':
+                e.preventDefault();
+                closeLightbox();
+                break;
         }
+    }
+});
 
-    });
+// Animations
 
-},{threshold:.15});
-
-reveals.forEach(el=>observer.observe(el));
-
-window.onload = fetchAndRender;
-
-gsap.from('.hero-subtitle',{
-    y:60,
+gsap.from('nav',{
+    y:-80,
     opacity:0,
-    duration:1.2
+    duration:1
+});
+
+gsap.from('.hero-overlay',{
+    opacity:0,
+    duration:2
 });
 
 gsap.from('.hero h1',{
-    y:120,
+    y:100,
     opacity:0,
-    duration:1.6,
+    duration:1.5,
     ease:'power4.out'
 });
 
 gsap.from('.hero p',{
-    y:80,
+    y:50,
     opacity:0,
-    duration:1.4,
+    duration:1.2,
     delay:.4
 });
 
-gsap.from('.hero-btns',{
-    y:80,
-    opacity:0,
-    duration:1.4,
-    delay:.7
-});
+// Diagnostic function
+window.testFetch = async function(){
+    console.log('Testing fetch...');
+    try {
+        const response = await fetch('./data.json');
+        console.log('Fetch response status:', response.status);
+        const text = await response.text();
+        console.log('Response text length:', text.length);
+        console.log('First 100 chars:', text.substring(0, 100));
+        const data = JSON.parse(text);
+        console.log('Parsed JSON successfully. Items:', data.length);
+        return data;
+    } catch(e) {
+        console.error('Fetch test error:', e);
+    }
+};
+
+// Start
+console.log('Page loaded. Current directory context: ' + window.location.href);
+console.log('Attempting to load gallery...');
+fetchGallery();
 
 </script>
 
 </body>
 </html>
->>>>>>> e110670 (Upload images and update gallery design)
+<!--
+
+
+## Fixed Image Fetch Issues
+
+### Updated Logic
+
+* Uses item.link directly from data.json
+* Supports raw GitHub image URLs
+* Removes broken images automatically
+* Added loading state
+* Added fallback handling
+
+### Expected JSON Format
+
+
+json
+[
+  {
+    "image_name": 1,
+    "extensions": {
+      "jpg": "1.jpg",
+      "jpeg": null,
+      "png": null
+    },
+    "link": "https://raw.githubusercontent.com/7ravichandran96/anvaya/refs/heads/main/images/1.jpg"
+  }
+]
+ -->  
+<!-- update this changes with this code -->
